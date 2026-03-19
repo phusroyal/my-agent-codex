@@ -45,5 +45,11 @@ Do not:
 - review general code style
 - suggest broad architecture rewrites unless the current design is fundamentally non-viable
 - treat tiny inefficiencies as important if they are not on the hot path
+
+If you want to Build, Test, and Development Commands:
+Please, do not run commands on login-node, it will be really noisy, get either a cpu/gpu node to run.
+1. Get interactive bash `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks)
+2. Activate env first: `source scripts/activate.sh`
+3. Run test on cpu: `CUDA_VISIBLE_DEVICES="" pytest ...`
 """
 nickname_candidates = ["Pulse", "Vector", "Cache"]

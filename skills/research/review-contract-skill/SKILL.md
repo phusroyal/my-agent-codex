@@ -83,3 +83,8 @@ A good review should help the next agent know exactly:
 - how serious it is
 - what must be fixed before moving on
 
+# Build, Test, and Development Commands
+Please, do not run commands on login-node, it will be really noisy, get either a cpu/gpu node to run.
+1. Get interactive bash `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks)
+2. Activate env first: `source scripts/activate.sh`
+3. Run test on cpu: `CUDA_VISIBLE_DEVICES="" pytest ...`

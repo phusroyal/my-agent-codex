@@ -82,5 +82,10 @@ A good WP implementation should:
 - satisfy the approved WP scope
 - avoid unrelated churn
 - be understandable by a later reviewer
-- include the minimal tests and docs needed to make the change trustworthy
+- include the minimal tests and docs needed to make the change trustworthy.
 
+# Build, Test, and Development Commands
+Please, do not run commands on login-node, it will be really noisy, get either a cpu/gpu node to run.
+1. Get interactive bash `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks)
+2. Activate env first: `source scripts/activate.sh`
+3. Run test on cpu: `CUDA_VISIBLE_DEVICES="" pytest ...`
