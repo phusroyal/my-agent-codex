@@ -63,11 +63,15 @@ Do not:
 - rewrite the whole design unless the implementation proves it necessary
 
 If you need to run commands:
-- do not use the login node 
-- get an interactive CPU/GPU node first `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks) in the begining of your session. Or one-shot `srun -p cpu bash -lc '...'` commands for brief inspection/work;
-- activate the environment with `source scripts/activate.sh`
-- use CPU tests only when the path is genuinely CPU-only
+- never run them on the login node
+- at the beginning of the session, acquire a single interactive allocation and keep using that same shell for all command execution in this task
+  - CPU work: `srun --pty bash -i`
+  - GPU work only when required by the task: `srun --gres=gpu:1 --pty bash -i`
+- do not use one-shot `srun ... bash -lc '...'` commands
+- do not repeatedly request new allocations for small follow-up commands; continue working inside the existing interactive shell unless there is a clear reason to switch resources
+- once inside the allocated node, activate the environment with `source scripts/activate.sh`
+- use CPU tests only for genuinely CPU-only logic
 - for GPU-sensitive work, prefer targeted GPU validation in addition to small CPU checks
-- remember to close the node after use
+- when finished, close the allocation with `exit`
 """
 nickname_candidates = ["Atlas", "Echo", "Harbor"]

@@ -168,21 +168,50 @@ A strong review should also make clear:
 # Build, Test, and Development Commands
 
 Do not run commands on the login node.
-Get either a CPU or GPU interactive node first.
 
-1. CPU interactive bash:
-   `srun --pty bash -i`
-   Or one-shot `srun -p cpu bash -lc '...'` commands for brief inspection/work;
+Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.  
+Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, testing, or development work.
 
-2. GPU interactive bash (only gpu related tasks):
-   `srun --gres=gpu:1 --pty bash -i`
+### 1. Start an interactive shell
+For CPU work:
+` srun --pty bash -i `
 
-3. Activate environment:
-   `source scripts/activate.sh`
+For GPU work, only when the task is actually GPU-related:
+` srun --gres=gpu:1 --pty bash -i `
 
-4. Use CPU tests only for genuinely CPU-only logic:
-   `CUDA_VISIBLE_DEVICES="" pytest ...`
+### 2. Activate the environment inside the allocated shell
+` source scripts/activate.sh `
 
-5. For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
+### 3. Run commands inside that same interactive session
+Examples:
+- inspection
+- tests
+- debugging
+- small scripts
+- repeated iterations during development
 
-6. Remember to close the node after use: `exit`
+Do not repeatedly request fresh allocations for small follow-up commands if the current interactive session is still appropriate.
+
+### 4. Testing guidance
+Use CPU tests only for genuinely CPU-only logic:
+` CUDA_VISIBLE_DEVICES="" pytest ... `
+
+For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
+
+### 5. Close the allocation when finished
+` exit `
+
+## Execution rule
+
+Use one interactive allocation per work chunk whenever possible.
+
+Preferred pattern:
+1. request an interactive node
+2. activate the environment
+3. run all related commands inside that session
+4. exit when done
+
+Avoid:
+- one-shot `srun ... bash -lc '...'` commands
+- repeated short allocations for closely related commands
+- doing command execution directly on the login node

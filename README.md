@@ -1,3 +1,3 @@
 git add .
-git commit -m "get an interactive bash"
+git commit -m "Ask not to use one-shot"
 git push
