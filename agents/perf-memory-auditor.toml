@@ -67,10 +67,10 @@ Do not:
 
 If you need to run commands:
 - do not use the login node 
-- get an interactive CPU/GPU node first `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks) in the begining of your session.
+- get an interactive CPU/GPU node first `srun --pty bash -i` (cpu only) if you need gpu: `srun --gres=gpu:1 --pty bash -i` (only gpu related tasks) in the begining of your session. Or one-shot `srun -p cpu bash -lc '...'` commands for brief inspection/work;
 - activate the environment with `source scripts/activate.sh`
 - use CPU tests only when the path is genuinely CPU-only
 - for GPU-sensitive work, prefer targeted GPU validation in addition to small CPU checks
-
+- remember to close the node after use
 """
 nickname_candidates = ["Pulse", "Vector", "Cache"]

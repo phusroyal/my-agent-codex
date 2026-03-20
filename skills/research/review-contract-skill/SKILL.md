@@ -172,8 +172,9 @@ Get either a CPU or GPU interactive node first.
 
 1. CPU interactive bash:
    `srun --pty bash -i`
+   Or one-shot `srun -p cpu bash -lc '...'` commands for brief inspection/work;
 
-2. GPU interactive bash:
+2. GPU interactive bash (only gpu related tasks):
    `srun --gres=gpu:1 --pty bash -i`
 
 3. Activate environment:
@@ -183,3 +184,5 @@ Get either a CPU or GPU interactive node first.
    `CUDA_VISIBLE_DEVICES="" pytest ...`
 
 5. For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
+
+6. Remember to close the node after use: `exit`

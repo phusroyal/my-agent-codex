@@ -1,0 +1,49 @@
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+
+[features]
+multi_agent = true
+
+# =========================
+# SKILL Registration
+# =========================
+
+[[skills.config]]
+path = "/home/hoang/.codex/skills/research/research-plan-skill/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = "/home/hoang/.codex/skills/research/wp-implementation-skill/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = "/home/hoang/.codex/skills/research/review-contract-skill/SKILL.md"
+enabled = true
+
+# =========================
+# Codex Agent Registration
+# =========================
+
+[agents.context_reader]
+config_file = "/home/hoang/.codex/agents/context-reader.toml"
+
+[agents.design_planner]
+config_file = "/home/hoang/.codex/agents/design-planner.toml"
+
+[agents.plan_critic]
+config_file = "/home/hoang/.codex/agents/plan-critic.toml"
+
+[agents.wp_implementer]
+config_file = "/home/hoang/.codex/agents/wp-implementer.toml"
+
+[agents.code_reviewer]
+config_file = "/home/hoang/.codex/agents/code-reviewer.toml"
+
+[agents.completion_validator]
+config_file = "/home/hoang/.codex/agents/completion-validator.toml"
+
+[agents.perf_memory_auditor]
+config_file = "/home/hoang/.codex/agents/perf-memory-auditor.toml"
+
+[agents.experiment_hygiene_guardian]
+config_file = "/home/hoang/.codex/agents/experiment-hygiene-guardian.toml"
