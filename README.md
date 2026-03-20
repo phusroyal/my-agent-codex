@@ -1,3 +1,3 @@
 git add .
-git commit -m "Ask not to use one-shot"
+git commit -m "Rm blank lines"
 git push

@@ -4,21 +4,14 @@ description: Use when implementing one approved work package in a research codeb
 ---
 
 # Work Package Implementation Skill
-
 ## Purpose
-
 Implement exactly one approved work package with minimal blast radius.
-
 This skill is for coding after the plan is already accepted.
-
 The goal is not just to make the code pass tests. The goal is to produce code that is trustworthy under realistic workloads, maintainable in the repository, and appropriate for GPU-first research systems.
 
 ## Implementation stance
-
 Implement like a production-grade GPU systems engineer.
-
 Assume the path is GPU-first unless evidence says otherwise.
-
 Be suspicious of:
 - Python-heavy orchestration around tensor work
 - unnecessary host↔device movement
@@ -27,11 +20,9 @@ Be suspicious of:
 - poor layout/contiguity/dtype handling
 - convenient but slow data structures in critical paths
 - tests shaped around the code rather than the intended behavior
-
 Passing small tests is evidence, not proof.
 
 ## When to use
-
 Use this skill when the user asks to:
 - implement WP0/WP1/etc.
 - code one bounded phase from an approved plan
@@ -40,7 +31,6 @@ Use this skill when the user asks to:
 - implement a GPU-sensitive or performance-sensitive subsystem from an approved design
 
 ## When not to use
-
 Do not use this skill for:
 - making the initial architecture plan
 - broad exploratory repo reading without coding
@@ -49,18 +39,15 @@ Do not use this skill for:
 - speculative optimization work that is not part of the approved WP
 
 ## Required inputs
-
 Before coding, re-read:
 - the approved plan
 - the task or math note if relevant
 - the current code paths being modified
 - any existing review findings that constrain the fix
 - any runtime, device, dtype, checkpoint, or validation constraints mentioned in the plan
-
 If something important is underspecified, call it out explicitly instead of guessing silently.
 
 ## Procedure
-
 1. Confirm the exact WP boundary.
 2. Identify the minimal set of files that need to change.
 3. Identify the hot path, runtime-sensitive contracts, and likely memory-sensitive surfaces.
@@ -77,7 +64,6 @@ If something important is underspecified, call it out explicitly instead of gues
 10. Summarize touched files, design choices, tests, and unresolved concerns.
 
 ## Implementation rules
-
 - One work package only unless a tiny cross-WP change is required to unblock correctness.
 - Do not silently pull future work into the current task.
 - Do not import from archive/reference code.
@@ -87,9 +73,7 @@ If something important is underspecified, call it out explicitly instead of gues
 - Keep new modules focused and reasonably small.
 
 ## GPU / runtime rules
-
 Assume GPU-first execution unless evidence says otherwise.
-
 Actively optimize for:
 - device residency
 - fewer launches
@@ -97,7 +81,6 @@ Actively optimize for:
 - fewer unnecessary allocations/materializations
 - lower sync pressure
 - layout- and dtype-aware tensor flows
-
 Be especially careful about:
 - Python loops over tokens/features/contexts in hot paths
 - repeated `.item()`, `.cpu()`, `.numpy()`, logging, or debug branching in performance-sensitive code
@@ -105,9 +88,7 @@ Be especially careful about:
 - CPU-side bookkeeping that stalls or fragments throughput
 - non-contiguous flows that quietly hurt performance
 - hidden quadratic work that tiny tests will not reveal
-
 If a path is intentionally CPU-side, justify why.
-
 Choose algorithms and data structures intentionally:
 - consider access patterns and real scale
 - do not default to convenient but slow patterns
@@ -115,11 +96,8 @@ Choose algorithms and data structures intentionally:
 - prefer readable fast code over abstract slow code
 
 ## Testing rules
-
 Tests must validate intended behavior, invariants, and failure modes, not merely mirror the implementation.
-
 Prefer requirement-shaped tests over code-shaped tests.
-
 Tests should cover, where relevant:
 - primary behavior
 - realistic edge cases
@@ -127,7 +105,6 @@ Tests should cover, where relevant:
 - device/dtype/layout/indexing-sensitive behavior
 - at least one stress-oriented or scale-aware check for performance-sensitive paths when feasible
 - comparison against a slower but trustworthy reference path when useful
-
 Be suspicious of:
 - tiny toy-only tests
 - tests that mirror helper internals
@@ -135,15 +112,12 @@ Be suspicious of:
 - heavily mocked tests with weak behavioral coverage
 - tests that collaborate with the current implementation to pass
 - green tests that say nothing about runtime cliffs, memory spikes, or sync-heavy behavior
-
 Do not create tests that are only good at proving the code did what the code already does.
 
 ## Output format
-
 Use this exact structure unless the user asks otherwise.
 
 ### Scope confirmed
-
 ### Files changed
 For each file:
 - what changed
@@ -162,11 +136,9 @@ Include:
 - whether they exercise GPU-sensitive behavior when relevant
 
 ### Risks / unresolved concerns
-
 ### Recommended next step
 
 ## Quality bar
-
 A good WP implementation should:
 - satisfy the approved WP scope
 - avoid unrelated churn
@@ -174,7 +146,6 @@ A good WP implementation should:
 - be appropriate for realistic GPU workloads, not just toy inputs
 - use reasonable algorithms and data structures for the expected scale
 - include the minimal but realistic tests and docs needed to make the change trustworthy
-
 A strong WP implementation should also make it hard for future reviewers to say:
 - the hot path is Python-shaped
 - the data structures are convenient but suboptimal
@@ -182,16 +153,13 @@ A strong WP implementation should also make it hard for future reviewers to say:
 - the code will fall over at real batch/sequence/context scale
 
 # Build, Test, and Development Commands
-
 Do not run commands on the login node.
-
-Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.  
+Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.
 Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, testing, or development work.
 
 ### 1. Start an interactive shell
 For CPU work:
 ` srun --pty bash -i `
-
 For GPU work, only when the task is actually GPU-related:
 ` srun --gres=gpu:1 --pty bash -i `
 
@@ -205,28 +173,23 @@ Examples:
 - debugging
 - small scripts
 - repeated iterations during development
-
 Do not repeatedly request fresh allocations for small follow-up commands if the current interactive session is still appropriate.
 
 ### 4. Testing guidance
 Use CPU tests only for genuinely CPU-only logic:
 ` CUDA_VISIBLE_DEVICES="" pytest ... `
-
 For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
 
 ### 5. Close the allocation when finished
 ` exit `
 
 ## Execution rule
-
 Use one interactive allocation per work chunk whenever possible.
-
 Preferred pattern:
 1. request an interactive node
 2. activate the environment
 3. run all related commands inside that session
 4. exit when done
-
 Avoid:
 - one-shot `srun ... bash -lc '...'` commands
 - repeated short allocations for closely related commands

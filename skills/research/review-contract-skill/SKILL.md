@@ -4,29 +4,21 @@ description: Use when reviewing or validating an implementation against an appro
 ---
 
 # Review Contract Skill
-
 ## Purpose
-
 Review an implementation against its intended contract.
-
 This skill supports both broad code review and strict completion validation.
-
 The goal is not just to check whether code looks reasonable or whether tests pass. The goal is to decide whether the implementation is trustworthy for real workloads, especially GPU-sensitive or scale-sensitive paths.
 
 ## Review stance
-
 Review like a production-grade GPU systems gate.
-
 Assume the implementation may:
 - pass toy tests but fail at realistic scale
 - be semantically correct but operationally poor
 - hide Python hotspots, sync points, or host-device transfers
 - have tests shaped around the code rather than the real requirement
-
 Be strict. Passing tests is evidence, not proof.
 
 ## When to use
-
 Use this skill when the user asks to:
 - review a completed WP
 - check whether implementation matches the plan
@@ -36,7 +28,6 @@ Use this skill when the user asks to:
 - check whether a performance-sensitive or GPU-sensitive path is actually ready
 
 ## When not to use
-
 Do not use this skill for:
 - generating the first plan
 - exploratory repo reading before scope is understood
@@ -44,7 +35,6 @@ Do not use this skill for:
 - broad architecture brainstorming before a concrete contract exists
 
 ## Review dimensions
-
 Always check these dimensions unless the user narrows scope.
 
 ### 1. Functionality
@@ -90,7 +80,6 @@ Check:
 
 ### 8. Testing quality and realism
 Tests must validate the intended behavior, not merely the current implementation shape.
-
 Check:
 - primary behavior coverage
 - realistic edge cases
@@ -98,7 +87,6 @@ Check:
 - realistic device/dtype/layout/indexing coverage for tensor/GPU-sensitive code
 - stress-oriented or scale-aware checks for performance-sensitive paths when feasible
 - whether tests compare against a trustworthy reference path when helpful
-
 Be especially suspicious of:
 - tiny toy-only tests
 - tests that mirror helper internals
@@ -108,7 +96,6 @@ Be especially suspicious of:
 - “green” tests that say nothing about runtime cliffs, sync costs, or memory spikes
 
 ## Procedure
-
 1. Re-read the approved plan or acceptance criteria.
 2. Inspect the implementation with the contract in mind.
 3. Identify the intended hot paths and runtime-sensitive surfaces.
@@ -119,7 +106,6 @@ Be especially suspicious of:
 8. Give the minimal next actions needed to reach PASS.
 
 ## Review rules
-
 - Prioritize correctness and completeness over style nits.
 - Do not approve work that is only “almost done.”
 - Do not approve work whose tests are too code-oriented or unrealistic.
@@ -130,52 +116,38 @@ Be especially suspicious of:
 - For GPU-sensitive code, do not treat CPU-shaped validation as sufficient evidence.
 
 ## Output format
-
 Use this exact structure unless the user asks otherwise.
 
 ### Verdict
 PASS or REVISE
-
 ### Major findings
-
 ### Medium findings
-
 ### GPU / runtime / scaling findings
-
 ### Algorithm / data-structure findings
-
 ### Missing tests or docs
-
 ### Mismatch with approved plan
-
 ### Minimal next actions
-
 ### Most likely code review flags
 
 ## Quality bar
-
 A good review should help the next agent know exactly:
 - what is wrong
 - how serious it is
 - whether it is a correctness issue, runtime issue, validation issue, or completeness issue
 - what must be fixed before moving on
-
 A strong review should also make clear:
 - whether the code is trustworthy under realistic workloads
 - whether the tests prove the intended behavior instead of mirroring the implementation
 - whether the hot path is production-grade or only toy-grade
 
 # Build, Test, and Development Commands
-
 Do not run commands on the login node.
-
-Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.  
+Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.
 Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, testing, or development work.
 
 ### 1. Start an interactive shell
 For CPU work:
 ` srun --pty bash -i `
-
 For GPU work, only when the task is actually GPU-related:
 ` srun --gres=gpu:1 --pty bash -i `
 
@@ -189,28 +161,23 @@ Examples:
 - debugging
 - small scripts
 - repeated iterations during development
-
 Do not repeatedly request fresh allocations for small follow-up commands if the current interactive session is still appropriate.
 
 ### 4. Testing guidance
 Use CPU tests only for genuinely CPU-only logic:
 ` CUDA_VISIBLE_DEVICES="" pytest ... `
-
 For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
 
 ### 5. Close the allocation when finished
 ` exit `
 
 ## Execution rule
-
 Use one interactive allocation per work chunk whenever possible.
-
 Preferred pattern:
 1. request an interactive node
 2. activate the environment
 3. run all related commands inside that session
 4. exit when done
-
 Avoid:
 - one-shot `srun ... bash -lc '...'` commands
 - repeated short allocations for closely related commands

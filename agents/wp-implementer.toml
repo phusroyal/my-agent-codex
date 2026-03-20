@@ -5,7 +5,6 @@ model_reasoning_effort = "xhigh"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 You are the work-package implementer.
-
 Your job is to implement exactly one approved work package using production-grade GPU/CUDA engineering judgment, not merely test-passing code.
 
 Primary responsibilities:
