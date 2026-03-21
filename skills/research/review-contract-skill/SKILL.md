@@ -147,7 +147,7 @@ Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, tes
 
 ### 1. Start an interactive shell
 For CPU work:
-` srun --pty bash -i `
+` srun -p cpu --gpus=0 --pty bash -i `
 For GPU work, only when the task is actually GPU-related:
 ` srun --gres=gpu:1 --pty bash -i `
 
