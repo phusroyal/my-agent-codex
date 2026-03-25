@@ -23,59 +23,122 @@ Implementation priorities:
 
 Assume GPU-first execution unless evidence says otherwise.
 
-Required coding standards:
+---
+## TDD-first workflow (MANDATORY)
+You must follow strict test-driven development for every work package.
+
+### Step 1 — Write tests FIRST
+- Derive tests directly from the approved plan and acceptance criteria.
+- Tests must define:
+  - expected inputs/outputs
+  - invariants
+  - failure modes
+- Do NOT create mock implementations or placeholder logic for missing code.
+- Do NOT write code yet.
+
+### Step 2 — Confirm tests fail
+- Run the tests.
+- Verify they fail for the correct reason (missing functionality or incorrect behavior).
+- If tests pass prematurely, they are invalid → fix them.
+
+### Step 3 — Lock the contract
+- Treat the tests as the contract.
+- Do NOT modify tests after this point unless:
+  - they are incorrect, or
+  - they do not reflect the plan
+
+### Step 4 — Implement code
+- Implement code to make ALL tests pass.
+- Do NOT modify tests to make them pass.
+- Iterate until:
+  - correctness is achieved
+  - GPU/runtime quality is acceptable
+
+### Step 5 — Validate and finalize
+- Ensure:
+  - tests pass
+  - behavior matches real workload expectations
+  - no hidden performance or memory issues
+- Only then consider the WP complete.
+
+---
+## Required coding standards
 - One work package only.
 - No archive imports or runtime dependence on reference code.
 - Prefer vectorized, batched, fused, amortized, or cache-aware GPU paths when appropriate.
 - Keep tensors on device when practical; avoid unnecessary host↔device movement.
 - Be explicit about dtype, device, layout, contiguity, and synchronization semantics.
-- Avoid avoidable Python hotspots in critical paths:
-  - loops over tokens/features/contexts when a tensorized path is viable
-  - repeated small kernel launches caused by Python orchestration
-  - repeated conversions, cloning, or allocation in inner loops
-  - CPU-side bookkeeping that forces sync or stalls throughput
-  - hidden .item(), print(), or shape/debug patterns in hot paths
-- Choose data structures intentionally; do not default to convenient but slow patterns.
-- Do not hide behavior in wrappers unless the wrapper creates real reuse or clarity.
+
+Avoid Python hotspots in critical paths:
+- loops over tokens/features/contexts when a tensorized path is viable
+- repeated small kernel launches from Python orchestration
+- repeated conversions, cloning, or allocations in inner loops
+- CPU-side bookkeeping that forces sync
+- hidden `.item()`, logging, or debug patterns in hot paths
+
+- Choose data structures intentionally; avoid convenient but slow patterns.
+- Do not hide behavior in wrappers unless they add real clarity or reuse.
 - If a path is intentionally CPU-side, justify why.
 
-CUDA/GPU coding expectations:
-- think in terms of residency, launch count, bandwidth, and synchronization
-- minimize shape churn and repeated materialization
-- avoid accidental non-contiguous patterns when they harm hot paths
-- prefer precomputation or reuse over recomputation in the inner loop
-- preserve correctness before adding approximations
+---
+## CUDA / GPU expectations
+- Optimize for residency, launch count, bandwidth, and synchronization
+- Minimize shape churn and repeated materialization
+- Avoid harmful non-contiguous layouts in hot paths
+- Prefer reuse/precomputation over recomputation
+- Preserve correctness before approximations
 
-Testing standards:
-- Tests must validate external behavior, invariants, and failure modes, not just reproduce implementation details.
-- Prefer requirement-shaped tests over code-shaped tests.
-- Include realistic edge cases.
-- For performance-sensitive paths, add at least one GPU-realistic or scale-aware check when feasible.
-- Do not create toy tests that pass while the real workload would fail, thrash memory, or synchronize excessively.
-- Where useful, test equivalence against a slower reference path on realistic shapes.
+---
+## Testing standards
+- Tests must validate:
+  - external behavior
+  - invariants
+  - failure modes
+- Prefer requirement-shaped tests over code-shaped tests
 
+Tests should include:
+- realistic edge cases
+- adversarial or malformed inputs where relevant
+- device/dtype/layout-sensitive cases
+- at least one scale-aware or GPU-relevant check when feasible
+- comparison to a slower reference path when useful
+
+Reject:
+- toy-only tests
+- tests that mirror implementation structure
+- tests that collaborate with the implementation to pass
+- tests that ignore runtime/memory behavior
+
+---
+## Reporting requirements
 Before finishing, report:
 1. Files changed and why
 2. Main design and GPU/performance choices
 3. Tests added or run, and what behaviors they validate
 4. Known limitations or unresolved concerns
 
-Do not:
-- silently spill into future work packages
-- perform broad unrelated cleanup
-- write CPU-shaped code for GPU paths
-- add tests that are tightly coupled to implementation shape rather than intended behavior
+---
+## Execution constraints (Slurm)
+- Never run commands on the login node
+- Use ONE persistent allocation per session
+CPU:
+`srun -p cpu --gpus=0 --pty bash -i`
+GPU (only if needed):
+`srun --gres=gpu:1 --pty bash -i`
+- Do NOT use one-shot `srun ... bash -lc`
+- Do NOT repeatedly allocate new nodes
+- Activate env:
+`source scripts/activate.sh`
+- Close session when done:
+`exit`
 
-If you need to run commands:
-- never run them on the login node
-- at the beginning of the session, acquire a single interactive allocation and keep using that same shell for all command execution in this task
-  - CPU work: `srun -p cpu --gpus=0 --pty bash -i`
-  - GPU work only when required by the task: `srun --gres=gpu:1 --pty bash -i`
-- do not use one-shot `srun ... bash -lc '...'` commands
-- do not repeatedly request new allocations for small follow-up commands; continue working inside the existing interactive shell unless there is a clear reason to switch resources
-- once inside the allocated node, activate the environment with `source scripts/activate.sh`
-- use CPU tests only for genuinely CPU-only logic
-- for GPU-sensitive work, prefer targeted GPU validation in addition to small CPU checks
-- when finished, close the allocation with `exit`
+---
+## Do NOT
+- spill into future work packages
+- perform unrelated cleanup
+- write CPU-shaped code for GPU paths
+- modify tests to make code pass
+- introduce hidden runtime costs that tests won’t catch
 """
+
 nickname_candidates = ["Craft", "Delta", "Mason"]

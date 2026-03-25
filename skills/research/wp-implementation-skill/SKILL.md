@@ -22,6 +22,44 @@ Be suspicious of:
 - tests shaped around the code rather than the intended behavior
 Passing small tests is evidence, not proof.
 
+---
+## TDD-first workflow (MANDATORY)
+
+You must follow strict test-driven development. Tests define the contract.
+
+### Step 1 — Write tests first
+- Derive tests directly from the approved plan and acceptance criteria.
+- Specify:
+  - inputs/outputs
+  - invariants
+  - failure modes
+- Do NOT implement feature code yet.
+- Do NOT create mocks or fake implementations for missing code.
+
+### Step 2 — Confirm tests fail
+- Run tests and verify they fail for the correct reason.
+- If tests pass prematurely → they are invalid → fix them.
+
+### Step 3 — Lock the contract
+- Treat tests as the specification.
+- Do NOT modify tests after this point unless:
+  - they are incorrect, or
+  - they do not reflect the approved plan
+
+### Step 4 — Implement code
+- Implement code to make ALL tests pass.
+- Do NOT modify tests to make them pass.
+- Iterate until:
+  - correctness holds
+  - GPU/runtime quality is acceptable
+
+### Step 5 — Validate realism
+- Ensure:
+  - no hidden sync/memory issues
+  - behavior holds under realistic shapes
+  - no Python-bound hot paths
+- Only then consider the WP complete.
+
 ## When to use
 Use this skill when the user asks to:
 - implement WP0/WP1/etc.
@@ -49,19 +87,13 @@ If something important is underspecified, call it out explicitly instead of gues
 
 ## Procedure
 1. Confirm the exact WP boundary.
-2. Identify the minimal set of files that need to change.
-3. Identify the hot path, runtime-sensitive contracts, and likely memory-sensitive surfaces.
-4. Reuse or generalize existing abstractions where that improves maintainability and does not degrade runtime quality.
-5. Avoid one-off wrappers unless they are clearly the cleanest option.
-6. Implement the core logic with explicit attention to:
-   - correctness
-   - GPU/runtime quality
-   - algorithm / data-structure quality
-   - memory behavior
-7. Add or update tests needed for the WP.
-8. Update docs/config/logging only where the WP requires it.
-9. Check the touched path for correctness, performance, memory, maintainability, and validation realism.
-10. Summarize touched files, design choices, tests, and unresolved concerns.
+2. Identify minimal file changes.
+3. Identify hot paths and memory-sensitive surfaces.
+4. Write tests (TDD Step 1–3).
+5. Implement core logic (TDD Step 4).
+6. Validate runtime + memory behavior (TDD Step 5).
+7. Update docs/config/logging only if required.
+8. Summarize changes, tests, and risks.
 
 ## Implementation rules
 - One work package only unless a tiny cross-WP change is required to unblock correctness.
@@ -124,10 +156,9 @@ For each file:
 - why it changed
 
 ### Main design choices
-Include:
-- correctness choices
-- GPU/runtime choices
-- algorithm / data-structure choices
+- correctness decisions
+- GPU/runtime decisions
+- algorithm/data-structure decisions
 
 ### Tests added or run
 Include:
@@ -160,7 +191,7 @@ Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, tes
 ### 1. Start an interactive shell
 For CPU work:
 ` srun -p cpu --gpus=0 --pty bash -i `
-For GPU work, only when the task is actually GPU-related:
+GPU (only if required):
 ` srun --gres=gpu:1 --pty bash -i `
 
 ### 2. Activate the environment inside the allocated shell

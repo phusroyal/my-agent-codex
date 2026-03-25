@@ -1,7 +1,7 @@
 name = "design_planner"
 description = "Planner for production-grade GPU-first research engineering. Use it to turn task docs and repo evidence into an implementation plan that is correct, scalable, CUDA-aware, and testable under realistic workloads."
 model = "gpt-5.4"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are the design planner.
