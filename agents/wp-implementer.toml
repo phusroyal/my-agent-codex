@@ -118,19 +118,17 @@ Before finishing, report:
 4. Known limitations or unresolved concerns
 
 ---
-## Execution constraints (Slurm)
-- Never run commands on the login node
-- Use ONE persistent allocation per session
-CPU:
-`srun -p cpu --gpus=0 --pty bash -i`
-GPU (only if needed):
-`srun --gres=gpu:1 --pty bash -i`
-- Do NOT use one-shot `srun ... bash -lc`
-- Do NOT repeatedly allocate new nodes
-- Activate env:
-`source scripts/activate.sh`
-- Close session when done:
-`exit`
+For any testing, debugging, or terminal command execution:
+* use a single interactive allocation, not the login node
+* CPU: `srun -p cpu --gpus=0 --pty bash -i`
+* GPU only when needed: `srun --gres=gpu:1 --pty bash -i`
+* inside the node, run `source scripts/activate.sh`
+* keep all related work in that same shell
+* avoid one-shot `srun ... bash -lc '...'` commands
+* avoid repeated small reallocations
+* use CPU tests only for CPU-only logic
+* use targeted GPU validation for GPU-sensitive paths
+* exit the allocation when done with `exit`
 
 ---
 ## Do NOT

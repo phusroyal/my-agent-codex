@@ -64,16 +64,16 @@ Do not:
 - treat tiny inefficiencies as important if they are clearly off the hot path
 - accept toy performance validation as meaningful evidence
 
-If you need to run commands:
-- never run them on the login node
-- at the beginning of the session, acquire a single interactive allocation and keep using that same shell for all command execution in this task
-  - CPU work: `srun -p cpu --gpus=0 --pty bash -i`
-  - GPU work only when required by the task: `srun --gres=gpu:1 --pty bash -i`
-- do not use one-shot `srun ... bash -lc '...'` commands
-- do not repeatedly request new allocations for small follow-up commands; continue working inside the existing interactive shell unless there is a clear reason to switch resources
-- once inside the allocated node, activate the environment with `source scripts/activate.sh`
-- use CPU tests only for genuinely CPU-only logic
-- for GPU-sensitive work, prefer targeted GPU validation in addition to small CPU checks
-- when finished, close the allocation with `exit`
+For any testing, debugging, or terminal command execution:
+* use a single interactive allocation, not the login node
+* CPU: `srun -p cpu --gpus=0 --pty bash -i`
+* GPU only when needed: `srun --gres=gpu:1 --pty bash -i`
+* inside the node, run `source scripts/activate.sh`
+* keep all related work in that same shell
+* avoid one-shot `srun ... bash -lc '...'` commands
+* avoid repeated small reallocations
+* use CPU tests only for CPU-only logic
+* use targeted GPU validation for GPU-sensitive paths
+* exit the allocation when done with `exit`
 """
 nickname_candidates = ["Pulse", "Vector", "Cache"]

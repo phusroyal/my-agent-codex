@@ -1,5 +1,14 @@
-model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
+developer_instructions = "You have oh-my-codex installed. AGENTS.md is the orchestration brain and main control surface. Follow AGENTS.md for skill/keyword routing, $name workflow invocation, and role-specialized subagents. Use outcome-first, concise progress updates: state the target result, constraints, validation evidence, and stop condition before adding process detail. Native subagents live in .codex/agents and may handle independent parallel subtasks within one Codex session or team pane. Skills load from .codex/skills, not native-agent TOMLs. Treat installed prompts as narrower execution surfaces under AGENTS.md authority."
+
+model_context_window = 250000
+model_auto_compact_token_limit = 200000
+
+model = "gpt-5.6-sol"
+personality = "pragmatic"
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "xhigh"
+service_tier = "fast"
 
 [features]
 multi_agent = true
@@ -8,16 +17,19 @@ multi_agent = true
 # SKILL Registration
 # =========================
 
+memories = true
+plugin_hooks = true
+goals = true
 [[skills.config]]
-path = "/home/hoang/.codex/skills/research/research-plan-skill/SKILL.md"
+path = "/home/hoang/.codex/skills/research_plan/SKILL.md"
 enabled = true
 
 [[skills.config]]
-path = "/home/hoang/.codex/skills/research/wp-implementation-skill/SKILL.md"
+path = "/home/hoang/.codex/skills/review_contract/SKILL.md"
 enabled = true
 
 [[skills.config]]
-path = "/home/hoang/.codex/skills/research/review-contract-skill/SKILL.md"
+path = "/home/hoang/.codex/skills/wp_implementation/SKILL.md"
 enabled = true
 
 # =========================
@@ -47,3 +59,97 @@ config_file = "/home/hoang/.codex/agents/perf-memory-auditor.toml"
 
 [agents.experiment_hygiene_guardian]
 config_file = "/home/hoang/.codex/agents/experiment-hygiene-guardian.toml"
+
+[projects."/home/hoang/.nvm"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/new/SAE-finetunning"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/CopyMech"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/SAEBench-modified-plt"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/new/SAEBench-modified"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/bluedot-tais-puzzle"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/murano"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/phusroyal.github.io"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/cots_geometry"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/zhphoneme"]
+trust_level = "trusted"
+
+[projects."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified"]
+trust_level = "trusted"
+
+[agents]
+max_threads = 6
+max_depth = 2
+
+[plugins."oh-my-codex@oh-my-codex-local"]
+enabled = true
+
+[marketplaces.oh-my-codex-local]
+source_type = "local"
+source = "/home/hoang/.nvm/versions/node/v24.15.0/lib/node_modules/oh-my-codex"
+
+[hooks.state]
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:369afedab9e8480f3e0ef5439490bcc0a3bf1fd332a06d7ea0c0988cf0e6dbe7"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:67fa2c36912cf9ac84e6df3555646098bba36ff4953d15f824b72c5eda4e0780"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:pre_compact:0:0"]
+trusted_hash = "sha256:39874d442ca4f5769c7ba7d35d6625df518bb99a7173e121b85823e9ea3c0066"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:post_compact:0:0"]
+trusted_hash = "sha256:e4ea1c0526e619343f675bca1498e5edd848bda314fc8fba4e97e13211801acc"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:6e725b7a64c6b0cb81fb5caa8300bae65f937289f7f3e8c4c998e7bd0012e7af"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:c3c69f170630eb2419538a32579df5ce20113cfa38cdd23000c0ffd31b1db4f2"
+
+[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:a8f3b599e3f52c0f5fc2f059cab173b026dbbee02cb35fa459b7b67eb098af3e"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:0beadaffc3fbe7daf525b5f470271fd9652bbb6a681827f62ae519aa585114fa"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:8ec4518162bac57963c9c3f8d3b6f65537a132387cafbbad1bf4c8fc3591209b"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:pre_compact:0:0"]
+trusted_hash = "sha256:0e2a59e8120f92417338b44563e5eded7dd0f7b4343c5cb5b93f730fae42e7be"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:post_compact:0:0"]
+trusted_hash = "sha256:3af8aa800d97defd1fcadbd4fca784153ebbe2471f37dbaa76f8a66ab565204b"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:c70df1f988a6965eb9d0fbdbfeaf84a609c98a9e24567dd1eb140cd6bf8e49f9"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:dbfc3e0626a9cf6bbe579a69e22409384ed0598fba08df794b355e1e7ced9e53"
+
+[hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:stop:0:0"]
+trusted_hash = "sha256:216a53a71d5c9819f0fdbbbbf869c4f8d9455e742dad9e0f1d91f3d67dbba2ff"
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 1

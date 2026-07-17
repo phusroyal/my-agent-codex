@@ -1,6 +1,6 @@
 ---
 name: review-contract-skill
-description: Use when reviewing or validating an implementation against an approved plan or acceptance criteria. Best for GPU-first production-grade review: functionality, completeness, runtime realism, algorithm/data-structure quality, hotspot analysis, realistic tests, edge cases, documentation/tests audit, and PASS-or-REVISE validation. Do not use for initial planning or direct implementation.
+description: Use when reviewing or validating an implementation against an approved plan or acceptance criteria. Best for GPU-first production-grade review of functionality, completeness, runtime realism, algorithm/data-structure quality, hotspot analysis, realistic tests, edge cases, documentation/tests audit, and PASS-or-REVISE validation. Do not use for initial planning or direct implementation.
 ---
 
 # Review Contract Skill
@@ -140,45 +140,31 @@ A strong review should also make clear:
 - whether the tests prove the intended behavior instead of mirroring the implementation
 - whether the hot path is production-grade or only toy-grade
 
-# Build, Test, and Development Commands
-Do not run commands on the login node.
-Always obtain a single interactive allocation first, then run all needed commands inside that same allocated shell.
-Do not use one-shot `srun ... bash -lc '...'` commands for brief inspection, testing, or development work.
+## Getting a Node for Testing or Terminal Work
+Use an interactive allocation for any testing, debugging, or terminal-based command execution.
 
-### 1. Start an interactive shell
-For CPU work:
-` srun -p cpu --gpus=0 --pty bash -i `
-For GPU work, only when the task is actually GPU-related:
-` srun --gres=gpu:1 --pty bash -i `
+### Start a session
+CPU:
+```bash
+srun -p cpu --gpus=0 --pty bash -i
+```
+GPU, only when needed:
+```bash
+srun --gres=gpu:1 --pty bash -i
+```
 
-### 2. Activate the environment inside the allocated shell
-` source scripts/activate.sh `
+### Set up the environment
+Inside the allocated shell:
+```bash
+source scripts/activate.sh
+```
 
-### 3. Run commands inside that same interactive session
-Examples:
-- inspection
-- tests
-- debugging
-- small scripts
-- repeated iterations during development
-Do not repeatedly request fresh allocations for small follow-up commands if the current interactive session is still appropriate.
+### Work in the same session
+Run all related tests, debugging steps, and terminal commands inside that session.
+Do not use one-shot `srun ... bash -lc '...'` commands, and do not create new allocations for small follow-up commands when the current session is still appropriate.
 
-### 4. Testing guidance
-Use CPU tests only for genuinely CPU-only logic:
-` CUDA_VISIBLE_DEVICES="" pytest ... `
-For GPU-sensitive paths, prefer targeted GPU validation in addition to small CPU checks.
-
-### 5. Close the allocation when finished
-` exit `
-
-## Execution rule
-Use one interactive allocation per work chunk whenever possible.
-Preferred pattern:
-1. request an interactive node
-2. activate the environment
-3. run all related commands inside that session
-4. exit when done
-Avoid:
-- one-shot `srun ... bash -lc '...'` commands
-- repeated short allocations for closely related commands
-- doing command execution directly on the login node
+### Finish
+When done:
+```bash
+exit
+```
