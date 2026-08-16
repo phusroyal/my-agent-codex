@@ -1,3 +1,1 @@
-git add .
-git commit -m "Rm blank lines"
-git push
+`fetch.sh` is to fetch the latest .codex files from given path. Then you make edits to the .codex files. After that, you run `./push.sh` to push the changes back to the repo.
