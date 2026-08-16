@@ -1,134 +1,24 @@
-model_reasoning_effort = "xhigh"
-developer_instructions = "You have oh-my-codex installed. AGENTS.md is the orchestration brain and main control surface. Follow AGENTS.md for skill/keyword routing, $name workflow invocation, and role-specialized subagents. Use outcome-first, concise progress updates: state the target result, constraints, validation evidence, and stop condition before adding process detail. Native subagents live in .codex/agents and may handle independent parallel subtasks within one Codex session or team pane. Skills load from .codex/skills, not native-agent TOMLs. Treat installed prompts as narrower execution surfaces under AGENTS.md authority."
-
-model_context_window = 250000
-model_auto_compact_token_limit = 200000
-
+developer_instructions = "<omx version=\"1\">You have oh-my-codex installed through Codex plugin mode. AGENTS.md is the orchestration brain and main control surface. Follow AGENTS.md for skill/keyword routing and $name workflow invocation. When the native surface exposes `agent_type` role routing, set `agent_type` to an installed role and never omit it for OMX work. When it reports `role_routing_unavailable` and adapted Ralplan authority is requested, do not fabricate `agent_type`; run `omx ralplan preflight --json` and stop on `unsupported_documented_leader_proof`. Ordinary work remains under its own workflow gates. If stale session history says to run that preflight before ordinary ultragoal/ralph/ralplan state, HUD, runtime, resume, or delegation work, treat that older wording as superseded. Never fake the role via a prompt label or infer authority from session/thread/pointer/transcript/cwd state. Registered Codex plugin marketplace surfaces supply OMX workflows and plugin-scoped companion resources when the plugin is installed; native agent roles are installed as setup-owned Codex agent TOML files in plugin mode so agent_type routing works. User-installed skills may still live under ~/.codex/skills. Use outcome-first, concise progress updates: state the target result, constraints, validation evidence, and stop condition before adding process detail.</omx>"
 model = "gpt-5.6-sol"
-personality = "pragmatic"
-approvals_reviewer = "user"
-plan_mode_reasoning_effort = "xhigh"
+model_reasoning_effort = "max"
 service_tier = "fast"
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "max"
 
 [features]
-multi_agent = true
-
-# =========================
-# SKILL Registration
-# =========================
-
-memories = true
 plugin_hooks = true
+
 goals = true
-[[skills.config]]
-path = "/home/hoang/.codex/skills/research_plan/SKILL.md"
+[plugins."ponytail@ponytail"]
 enabled = true
-
-[[skills.config]]
-path = "/home/hoang/.codex/skills/review_contract/SKILL.md"
-enabled = true
-
-[[skills.config]]
-path = "/home/hoang/.codex/skills/wp_implementation/SKILL.md"
-enabled = true
-
-# =========================
-# Codex Agent Registration
-# =========================
-
-[agents.context_reader]
-config_file = "/home/hoang/.codex/agents/context-reader.toml"
-
-[agents.design_planner]
-config_file = "/home/hoang/.codex/agents/design-planner.toml"
-
-[agents.plan_critic]
-config_file = "/home/hoang/.codex/agents/plan-critic.toml"
-
-[agents.wp_implementer]
-config_file = "/home/hoang/.codex/agents/wp-implementer.toml"
-
-[agents.code_reviewer]
-config_file = "/home/hoang/.codex/agents/code-reviewer.toml"
-
-[agents.completion_validator]
-config_file = "/home/hoang/.codex/agents/completion-validator.toml"
-
-[agents.perf_memory_auditor]
-config_file = "/home/hoang/.codex/agents/perf-memory-auditor.toml"
-
-[agents.experiment_hygiene_guardian]
-config_file = "/home/hoang/.codex/agents/experiment-hygiene-guardian.toml"
-
-[projects."/home/hoang/.nvm"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/new/SAE-finetunning"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/CopyMech"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/SAEBench-modified-plt"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/new/SAEBench-modified"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/bluedot-tais-puzzle"]
-trust_level = "trusted"
 
 [projects."/mnt/beegfs/work/hoang/codecode/murano"]
 trust_level = "trusted"
 
-[projects."/mnt/beegfs/work/hoang/codecode/phusroyal.github.io"]
+[projects."/mnt/beegfs/work/hoang/codecode/FEGA"]
 trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/cots_geometry"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/zhphoneme"]
-trust_level = "trusted"
-
-[projects."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified"]
-trust_level = "trusted"
-
-[agents]
-max_threads = 6
-max_depth = 2
-
-[plugins."oh-my-codex@oh-my-codex-local"]
-enabled = true
-
-[marketplaces.oh-my-codex-local]
-source_type = "local"
-source = "/home/hoang/.nvm/versions/node/v24.15.0/lib/node_modules/oh-my-codex"
 
 [hooks.state]
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:pre_tool_use:0:0"]
-trusted_hash = "sha256:369afedab9e8480f3e0ef5439490bcc0a3bf1fd332a06d7ea0c0988cf0e6dbe7"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:post_tool_use:0:0"]
-trusted_hash = "sha256:67fa2c36912cf9ac84e6df3555646098bba36ff4953d15f824b72c5eda4e0780"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:pre_compact:0:0"]
-trusted_hash = "sha256:39874d442ca4f5769c7ba7d35d6625df518bb99a7173e121b85823e9ea3c0066"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:post_compact:0:0"]
-trusted_hash = "sha256:e4ea1c0526e619343f675bca1498e5edd848bda314fc8fba4e97e13211801acc"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:session_start:0:0"]
-trusted_hash = "sha256:6e725b7a64c6b0cb81fb5caa8300bae65f937289f7f3e8c4c998e7bd0012e7af"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:user_prompt_submit:0:0"]
-trusted_hash = "sha256:c3c69f170630eb2419538a32579df5ce20113cfa38cdd23000c0ffd31b1db4f2"
-
-[hooks.state."/mnt/beegfs/work/hoang/codecode/.anwoy/SAEBench-modified/.codex/hooks.json:stop:0:0"]
-trusted_hash = "sha256:a8f3b599e3f52c0f5fc2f059cab173b026dbbee02cb35fa459b7b67eb098af3e"
 
 [hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:pre_tool_use:0:0"]
 trusted_hash = "sha256:0beadaffc3fbe7daf525b5f470271fd9652bbb6a681827f62ae519aa585114fa"
@@ -151,5 +41,28 @@ trusted_hash = "sha256:dbfc3e0626a9cf6bbe579a69e22409384ed0598fba08df794b355e1e7
 [hooks.state."oh-my-codex@oh-my-codex-local:hooks/hooks.json:stop:0:0"]
 trusted_hash = "sha256:216a53a71d5c9819f0fdbbbbf869c4f8d9455e742dad9e0f1d91f3d67dbba2ff"
 
-[tui.model_availability_nux]
-"gpt-5.6-sol" = 1
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5f81d38f47448a1581c08ec877e044d9e04dd6f814dce3f2671f7a8edadd719b"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:6a6f42bc3b58d6262db38bfd74d7f340fcca2b09cdb134aad365063f0bfefca4"
+
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:1423b56c1322f96c8f74c51c1e7ae9a047b904c1fa43ee9165d462fd7a6e70ef"
+
+[tui]
+status_line = ["model-with-reasoning", "git-branch", "permissions", "context-remaining", "five-hour-limit", "weekly-limit", "used-tokens"]
+status_line_use_colors = true
+
+[plugins."oh-my-codex@oh-my-codex-local"]
+enabled = true
+
+[marketplaces.ponytail]
+last_updated = "2026-08-15T16:51:10Z"
+last_revision = "2ed6c52c9d7e5e56942508591085fd45dea277d3"
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+
+[marketplaces.oh-my-codex-local]
+source_type = "local"
+source = "/home/hoang/.nvm/versions/node/v24.15.0/lib/node_modules/oh-my-codex"
