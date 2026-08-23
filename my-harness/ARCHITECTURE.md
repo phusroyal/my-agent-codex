@@ -1,0 +1,15 @@
+CONSTRAINTS: 
+- Keep it short and stable.
+- Start with what the system does.
+- List the main folders/modules and what each owns.
+- Show which parts may depend on which other parts.
+- Name important files, modules, and types.
+- State rules that must always stay true.
+- State important boundaries between parts of the system.
+- Add a short section for concerns that touch many areas.
+- Make it answer:
+  - “Where do I change X?”
+  - “What does this part do?”
+- Move detailed behavior into smaller docs or code comments.
+- Avoid fast-changing details.
+- Revisit it a few times per year.

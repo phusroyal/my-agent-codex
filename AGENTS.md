@@ -76,8 +76,8 @@ Only write tests for vital logics.
 Avoid writing over-engineering tests for but not limit to: json, configs, format, schema,... or any AI slop tests or tests for just some (user's) conditions.
 
 ### My Workflow Orchestration
-**Self-improvement loop.** After any correction from the user, update `tasks/lessons.md` with the pattern. Write rules that prevent the same mistake twice. Ruthlessly iterate on these until the mistake rate drops. Review lessons at session start.
-**Living Spec**. Use `tasks/implement-notes.md` only for multi-day work or unresolved scientific decisions that must survive context loss. Do not maintain an implementation transcript for ordinary bounded changes.
+**Self-improvement loop.** After any correction from the user, update `docs/decisions/lessons.md` with the pattern. Write rules that prevent the same mistake twice. Ruthlessly iterate on these until the mistake rate drops. Review lessons at session start.
+**Living Spec**. Use `docs/decisions/implement-notes.md` only for multi-day work or unresolved scientific decisions that must survive context loss. Do not maintain an implementation transcript for ordinary bounded changes.
 **Give reviewers extra time**. Reviewers need to have enough time to draft a faithful review.
 **Docstring and code comments**. Document public APIs and non-obvious scientific or numerical behavior. Comments explain why, assumptions, and invariants; do not narrate obvious code or require a comment for every logic block.
 **Code organization**. Organize by cohesive responsibility. Do not split files, add wrappers, or introduce abstractions solely to satisfy a line-count target.
@@ -120,7 +120,7 @@ For any testing, debugging, or terminal command execution:
 * use a single interactive allocation, not the login node
 * CPU: `srun -p cpu --gpus=0 --cpus-per-task=16 --mem=64G --time=8:00:00 --pty bash`
 * GPU only when needed (or it takes too long / cant get a cpu node): `srun --gres=gpu:a100:1 --cpus-per-task=16 --mem=64G --time=8:00:00 --pty bash`
-* inside the node, run `source scripts/activate.sh` to activate the virtual environment and set up cache paths
+* inside the node, run `source src/scripts/activate.sh` to activate the virtual environment and set up cache paths
 * to get access to huggingface, run `source /mnt/beegfs/work/hoang/.local/key.sh`
 * keep all related work in that same shell
 * avoid one-shot `srun ... bash -lc '...'` commands
@@ -136,3 +136,5 @@ For extensive coding, activate `$ponytail:ponytail` (or its `$ponytail` alias wh
 If an error appears after coding and reviewer subagents will be called, invoke `$context-refresh` first. Refresh only the affected authority, worktree delta, call or data flow, tests, and artifacts, then give reviewers a concise evidence packet instead of stale assumptions.
 
 Keep the development loop short. Prefer targeted checks that finish quickly after small edits, and do not repeatedly block `/goal` on multi-minute experiments. Run long or exhaustive experiments at the end, or occasionally when they are necessary to resolve a claim-changing uncertainty. Report deferred coverage honestly.
+
+For code-review workflows involving (multiple) review agents, the orchestrator or code leader must collect all requested reviews before fixing or implementing anything. Then invoke `$context-refresh`, scoped first to the current unstaged diff and directly affected files, and reconcile findings, shared root causes, conflicts, callers, tests, and governing contracts before choosing repairs. Do not address findings piecemeal or prepare later reviewers from a partially fixed tree; both create tunnel vision and repeated review-fix loops.
